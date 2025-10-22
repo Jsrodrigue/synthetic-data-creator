@@ -13,15 +13,24 @@ An intelligent synthetic data generator that uses OpenAI models to create realis
 - **Export**: Direct download of generated data in CSV format
 - **Included Examples**: Sample datasets for people and sentiment analysis
 
-## 🎓 LLM Engineering Concepts Demonstrated
+## 📸 Screenshots & Demo
 
-This project showcases several key concepts from LLM Engineering:
+### Application Interface
+![Main Interface](docs/screenshots/main_interface.png)
+*Main interface showing the synthetic data generator with all controls*
 
-- **Prompt Engineering**: Sophisticated system and user prompts for consistent data generation
-- **Output Parsing**: Robust JSON cleaning and validation techniques
-- **Data Validation**: Ensuring generated data meets quality and format requirements
-- **Reference-based Generation**: Using existing data to maintain statistical properties
-- **Web Interface Integration**: Building user-friendly applications with Gradio
+### Reference Data Preview
+![Reference Data](docs/screenshots/reference_data.png)
+*Reference CSV preview with example people data*
+
+### Generated Results
+![Generated Data](docs/screenshots/generated_data.png)
+*Example of generated synthetic data with download option*
+
+### Video Demo
+[![Video Demo](docs/screenshots/video_thumbnail.png)](https://youtube.com/watch?v=your-demo-video)
+*Click to watch a complete walkthrough of the application*
+
 
 ## 🚀 Installation
 
@@ -63,23 +72,6 @@ cp .env_example .env
 OPENAI_API_KEY=your_api_key_here
 ```
 
-## 📸 Screenshots & Demo
-
-### Application Interface
-![Main Interface](docs/screenshots/main_interface.png)
-*Main interface showing the synthetic data generator with all controls*
-
-### Reference Data Preview
-![Reference Data](docs/screenshots/reference_data.png)
-*Reference CSV preview with example people data*
-
-### Generated Results
-![Generated Data](docs/screenshots/generated_data.png)
-*Example of generated synthetic data with download option*
-
-### Video Demo
-[![Video Demo](docs/screenshots/video_thumbnail.png)](https://youtube.com/watch?v=your-demo-video)
-*Click to watch a complete walkthrough of the application*
 
 
 ## 🎯 Usage
