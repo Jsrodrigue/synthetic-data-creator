@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+uv.lock
+
+# Gradio cache
+gradio_cached_examples/
+gradio_tmp/
+temp_plots/
+
+# Environment
+.env
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+*.nb.html
+*.nb.pdf
