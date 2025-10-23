@@ -122,9 +122,10 @@ class SimpleEvaluator:
             if pd.api.types.is_numeric_dtype(reference_df[col]):
                 plt.figure(figsize=(6, 4))
                 df_box = pd.DataFrame({
-                    'Value': pd.concat([reference_df[col], generated_df[col]]),
-                    'Dataset': ['Reference']*len(reference_df[col]) + ['Generated']*len(generated_df[col])
-                })
+                            'Value': pd.concat([reference_df[col], generated_df[col]], ignore_index=True),
+                            'Dataset': ['Reference']*len(reference_df[col]) + ['Generated']*len(generated_df[col])
+                        })
+
                 sns.boxplot(x='Dataset', y='Value', data=df_box, palette=['#1f77b4','#ff7f0e'])
                 plt.title(f"Boxplot comparison for '{col}'")
                 plt.tight_layout()

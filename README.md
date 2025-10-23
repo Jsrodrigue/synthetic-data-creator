@@ -4,33 +4,54 @@ An intelligent synthetic data generator that uses OpenAI models to create realis
 
 > **🎓 Educational Project**: This project was created as part of the comprehensive LLM Engineering course on Udemy: [LLM Engineering: Master AI and Large Language Models](https://www.udemy.com/course/llm-engineering-master-ai-and-large-language-models/learn/lecture/52941433#questions/23828099). It demonstrates practical applications of LLM engineering principles, prompt engineering, and synthetic data generation techniques.
 
-## 📋 Features
-
-- **Intelligent Generation**: Uses OpenAI models (GPT-4o-mini, GPT-4.1-mini) to generate synthetic data
-- **Web Interface**: Easy-to-use Gradio application with data preview
-- **Reference Data**: Ability to load CSV files as reference to maintain statistical distributions
-- **JSON Validation**: Automatic output cleaning to ensure valid JSON
-- **Export**: Direct download of generated data in CSV format
-- **Included Examples**: Sample datasets for people and sentiment analysis
+## Key highlights:
+- Built with Python & Gradio  
+- Uses OpenAI GPT-4 models for tabular data synthesis  
+- Focused on statistical consistency and controlled randomness  
+- Lightweight and easy to extend
 
 ## 📸 Screenshots & Demo
 
 ### Application Interface
-![Main Interface](docs/screenshots/main_interface.png)
-*Main interface showing the synthetic data generator with all controls*
+<p align="center">
+  <img src="screenshots/homepage.png" alt="Main Interface" width="70%">
+</p>
+<p align="center"><em>Main interface showing the synthetic data generator with all controls</em></p>
 
-### Reference Data Preview
-![Reference Data](docs/screenshots/reference_data.png)
-*Reference CSV preview with example people data*
+### Generated Data Preview
+<p align="center">
+  <img src="screenshots/generated_table.png" alt="Generated table" width="70%">
+</p>
+<p align="center"><em> Generated CSV preview with the Wine dataset reference</em></p>
 
-### Generated Results
-![Generated Data](docs/screenshots/generated_data.png)
-*Example of generated synthetic data with download option*
+### Histogram plots
+<p align="center">
+  <img src="screenshots/histogram.png" alt="Histogram plot" width="70%">
+</p>
+<p align="center"><em>Example of Histogram comparison plot in the Wine dataset</em></p>
+
+### Boxplots
+<p align="center">
+  <img src="screenshots/boxplot.png" alt="Boxplot" width="70%">
+</p>
+<p align="center"><em>Example of Boxplot comparison</em></p>
+
 
 ### Video Demo
 [![Video Demo](docs/screenshots/video_thumbnail.png)](https://youtube.com/watch?v=your-demo-video)
 *Click to watch a complete walkthrough of the application*
 
+
+## 📋 Features
+
+- **Intelligent Generation**: Generates synthetic data using OpenAI models (GPT-4o-mini, GPT-4.1-mini)
+- **Web Interface**: Provides an intuitive Gradio UI with real-time data preview
+- **Reference Data**: Optionally load CSV files to preserve statistical distributions
+- **Export Options**: Download generated datasets directly in CSV format
+- **Included Examples**: Comes with ready-to-use sample datasets for people and sentiment analysis
+- **Dynamic Batching**: Automatically adapts batch size based on prompt length and reference sample size
+- **Reference Sampling**: Uses random subsets of reference data to ensure variability and reduce API cost.  
+  The sample size (default `32`) can be modified in `src/constants.py` via `N_REFERENCE_ROWS`.
 
 ## 🚀 Installation
 
@@ -51,7 +72,7 @@ pip install -r requirements.txt
 ### Installation with uv
 ```bash
 # Clone the repository
-git clone <your-repository>
+git clone https://github.com/Jsrodrigue/synthetic-data-creator.git
 cd synthetic_data
 
 # Install dependencies
@@ -86,8 +107,9 @@ The script will print a local URL (e.g., http://localhost:7860) or a shareable G
 ### How to use the interface
 
 1. **Configure Prompts**:
-   - **System Prompt**: You can use the default rules or edit the system prompt for data generation.
-   - **User Prompt**: Specifies what type of data to generate (default: 15 rows)
+   - **System Prompt**: Uses the default rules defined in `src/constants.py` or can be edited there for custom generation.
+   - **User Prompt**: Specifies what type of data to generate (default: 15 rows, defined in `src/constants.py`).
+
 
 2. **Select Model**:
    - `gpt-4o-mini`: Faster and more economical
@@ -116,7 +138,6 @@ The project includes a simple evaluation system focused on basic metrics and vis
 - **Easy to Understand**: Clear scores and simple reports
 - **Scale Invariant**: Works with datasets of different sizes
 - **Temporary Files**: Visualizations are generated in temp files and cleaned up automatically
-
 
 
 
@@ -182,21 +203,28 @@ The project includes a simple evaluation system focused on basic metrics and vis
 
 ```
 synthetic_data/
-├── app.py                 # Main Gradio application
-├── utils.py               # Data generation functions
-├── evaluation.py          # Data evaluation system
-├── demo_evaluation.py     # Evaluation demonstration script
-├── notebook.ipynb        # Experiments and development
-├── pyproject.toml        # Project configuration
-├── requirements.txt      # Dependencies
-├── data/                 # Example data
+├── app.py                 # Main Gradio application for synthetic data generation
+├── README.md              # Project documentation
+├── pyproject.toml         # Project configuration
+├── requirements.txt       # Python dependencies
+├── data/                  # Reference CSV datasets used for generating synthetic data
 │   ├── people_reference.csv
-│   └── sentiment_reference.csv
-├── screenshots/          # Screenshots of the app
-├── .env_example          # Environment variables template
-└── README.md            # This file
+│   ├── sentiment_reference.csv
+│   └── wine_reference.csv
+├── notebooks/             # Jupyter notebooks for experiments and development
+│   └── notebook.ipynb
+├── src/                   # Python source code
+│   ├── __init__.py
+    ├── constants.py       # Default constants, reference sample size, and default prompts
+│   ├── data_generation.py  # Core functions for batch generation and evaluation
+│   ├── evaluator.py        # Evaluation logic and metrics
+│   ├── IO_utils.py         # Utilities for file management and temp directories
+│   ├── openai_utils.py     # Wrappers for OpenAI API calls
+│   └── plot_utils.py  
+     # Functions to create visualizations from data
+├── temp_plots/            # Temporary folder for generated plot images (auto-cleaned)
+└── __pycache__/           # Python bytecode cache (auto-generated)
 ```
-
 
 ## 📄 License
 
@@ -210,13 +238,6 @@ If you have problems or questions:
 2. Search existing issues
 3. Create a new issue with problem details
 
-## 🔗 Useful Links
-
-- [OpenAI Documentation](https://platform.openai.com/docs)
-- [Gradio Documentation](https://gradio.app/docs/)
-- [Pandas Documentation](https://pandas.pydata.org/docs/)
-
----
 
 ## 🎓 Course Context & Learning Outcomes
 
@@ -236,8 +257,7 @@ This project was developed as part of the [LLM Engineering: Master AI and Large 
 ### Related Course Topics:
 - Prompt engineering techniques
 - LLM API integration and optimization
-- Synthetic data generation strategies
-- Production deployment considerations
+- Selection of best models for each usecase.
 
 ---
 
