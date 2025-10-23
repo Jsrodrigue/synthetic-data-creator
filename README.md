@@ -160,11 +160,6 @@ The project includes a simple evaluation system focused on basic metrics and vis
    - Support for local models (Ollama)
    - Comparison between different models
 
-4. **Enhanced Interface**:
-   - Generation history
-   - Predefined prompt templates
-   - Data visualizations
-
 ### Advanced Features
 
 1. **Conditional Generation**:
