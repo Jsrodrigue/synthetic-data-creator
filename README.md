@@ -38,7 +38,7 @@ An intelligent synthetic data generator that uses OpenAI models to create realis
 
 
 ### Video Demo
-[![Video Demo](https://img.youtube.com/vi/d7WWyoxwTlA/0.jpg)](https://youtu.be/d7WWyoxwTlA)
+[![Video Demo](https://img.youtube.com/vi/C7c8BbUGGBA/0.jpg)](https://youtu.be/C7c8BbUGGBA)
 
 *Click to watch a complete walkthrough of the application*
 
@@ -52,7 +52,7 @@ An intelligent synthetic data generator that uses OpenAI models to create realis
 - **Included Examples**: Comes with ready-to-use sample datasets for people and sentiment analysis
 - **Dynamic Batching**: Automatically adapts batch size based on prompt length and reference sample size
 - **Reference Sampling**: Uses random subsets of reference data to ensure variability and reduce API cost.  
-  The sample size (default `32`) can be modified in `src/constants.py` via `N_REFERENCE_ROWS`.
+  The sample size (default `64`) can be modified in `src/constants.py` via `N_REFERENCE_ROWS`.
 
 ## 🚀 Installation
 
@@ -103,7 +103,7 @@ OPENAI_API_KEY=your_api_key_here
 python app.py
 ```
 
-The script will print a local URL (e.g., http://localhost:7860) or a shareable Gradio link — open that link in your browser.
+The script will print a local URL (e.g., http://localhost:7860) — open that link in your browser.
 
 ### How to use the interface
 
@@ -225,13 +225,7 @@ synthetic_data/
 
 This project is under the MIT License. See the `LICENSE` file for more details.
 
-## 🆘 Support
 
-If you have problems or questions:
-
-1. Check the documentation
-2. Search existing issues
-3. Create a new issue with problem details
 
 
 ## 🎓 Course Context & Learning Outcomes
