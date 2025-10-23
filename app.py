@@ -8,124 +8,128 @@ from dotenv import load_dotenv
 import openai
 from src.constants import PROJECT_TEMP_DIR, SYSTEM_PROMPT, USER_PROMPT
 
-# ==========================================================
-# Setup
-# ==========================================================
+def main():
+    # ==========================================================
+    # Setup
+    # ==========================================================
 
-#Load the api key
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+    #Load the api key
+    load_dotenv()
+    openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Temporary folder for images
-os.makedirs(PROJECT_TEMP_DIR, exist_ok=True)
+    # Temporary folder for images
+    os.makedirs(PROJECT_TEMP_DIR, exist_ok=True)
 
-# Ensure temporary plot images are deleted when the program exits
-atexit.register(lambda: cleanup_temp_files(PROJECT_TEMP_DIR))
+    # Ensure temporary plot images are deleted when the program exits
+    atexit.register(lambda: cleanup_temp_files(PROJECT_TEMP_DIR))
 
-# ==========================================================
-# Gradio App
-# ==========================================================
-with gr.Blocks() as demo:
+    # ==========================================================
+    # Gradio App
+    # ==========================================================
+    with gr.Blocks() as demo:
 
-    # Store temp folder in state
-    temp_dir_state = gr.State(value=PROJECT_TEMP_DIR)
+        # Store temp folder in state
+        temp_dir_state = gr.State(value=PROJECT_TEMP_DIR)
 
-    gr.Markdown("# 🧠 Synthetic Data Generator (with OpenAI)")
+        gr.Markdown("# 🧠 Synthetic Data Generator (with OpenAI)")
 
-    # ======================================================
-    # Tabs for organized sections
-    # ======================================================
-    with gr.Tabs():
+        # ======================================================
+        # Tabs for organized sections
+        # ======================================================
+        with gr.Tabs():
 
-        # ------------------------------
-        # Tab 1: Input
-        # ------------------------------
-        with gr.Tab("Input"):
+            # ------------------------------
+            # Tab 1: Input
+            # ------------------------------
+            with gr.Tab("Input"):
 
-            # System prompt in collapsible
-            with gr.Accordion("System Prompt (click to expand)", open=False):
-                system_prompt_input = gr.Textbox(
-                    label="System Prompt",
-                    value=SYSTEM_PROMPT,
-                    lines=20
+                # System prompt in collapsible
+                with gr.Accordion("System Prompt (click to expand)", open=False):
+                    system_prompt_input = gr.Textbox(
+                        label="System Prompt",
+                        value=SYSTEM_PROMPT,
+                        lines=20
+                    )
+
+                # User prompt box
+                user_prompt_input = gr.Textbox(label="User Prompt", value=USER_PROMPT, lines=5)
+
+                # Model selection
+                model_select = gr.Dropdown(
+                    label="OpenAI Model",
+                    choices=["gpt-4o-mini", "gpt-4.1-mini"],
+                    value="gpt-4o-mini"
                 )
 
-            # User prompt box
-            user_prompt_input = gr.Textbox(label="User Prompt", value=USER_PROMPT, lines=5)
+                # Reference CSV upload
+                reference_input = gr.File(label="Reference CSV (optional)", file_types=[".csv"])
 
-            # Model selection
-            model_select = gr.Dropdown(
-                label="OpenAI Model",
-                choices=["gpt-4o-mini", "gpt-4.1-mini"],
-                value="gpt-4o-mini"
-            )
+                # Examples
+                gr.Examples(
+                    examples=["data/sentiment_reference.csv","data/people_reference.csv","data/wine_reference.csv"],
+                    inputs=reference_input
+                )
 
-            # Reference CSV upload
-            reference_input = gr.File(label="Reference CSV (optional)", file_types=[".csv"])
+                # Generate button
+                generate_btn = gr.Button("🚀 Generate Data")
 
-            # Examples
-            gr.Examples(
-                examples=["data/sentiment_reference.csv","data/people_reference.csv","data/wine_reference.csv"],
-                inputs=reference_input
-            )
+                # Download button
+                download_csv = gr.File(label="Download CSV")
 
-            # Generate button
-            generate_btn = gr.Button("🚀 Generate Data")
+            # ------------------------------
+            # Tab 2: Reference Table
+            # ------------------------------
+            with gr.Tab("Reference Table"):
+                reference_display = gr.DataFrame(label="Reference CSV Preview")
 
-            # Download button
-            download_csv = gr.File(label="Download CSV")
+            # ------------------------------
+            # Tab 3: Generated Table
+            # ------------------------------
+            with gr.Tab("Generated Table"):
+                output_df = gr.DataFrame(label="Generated Data")
+                
 
-        # ------------------------------
-        # Tab 2: Reference Table
-        # ------------------------------
-        with gr.Tab("Reference Table"):
-            reference_display = gr.DataFrame(label="Reference CSV Preview")
+            # ------------------------------
+            # Tab 4: Evaluation
+            # ------------------------------
+            with gr.Tab("Comparison"):
+                with gr.Accordion("Evaluation Results (click to expand)", open=True):
+                    evaluation_df = gr.DataFrame(label="Evaluation Results")
 
-        # ------------------------------
-        # Tab 3: Generated Table
-        # ------------------------------
-        with gr.Tab("Generated Table"):
-            output_df = gr.DataFrame(label="Generated Data")
-            
+            # ------------------------------
+            # Tab 5: Visualizations
+            # ------------------------------
 
-        # ------------------------------
-        # Tab 4: Evaluation
-        # ------------------------------
-        with gr.Tab("Comparison"):
-            with gr.Accordion("Evaluation Results (click to expand)", open=True):
-                evaluation_df = gr.DataFrame(label="Evaluation Results")
+            with gr.Tab("Visualizations"):
+                gr.Markdown("# Click on the box to expand")
+                
+                images_gallery = gr.Gallery(
+                    label="Column Visualizations",
+                    show_label=True,
+                    columns=2,
+                    height='auto',
+                    interactive=True
+                )
 
-        # ------------------------------
-        # Tab 5: Visualizations
-        # ------------------------------
+            # Hidden state for internal use
+            generated_state = gr.State()
 
-        with gr.Tab("Visualizations"):
-            gr.Markdown("# Click on the box to expand")
-            
-            images_gallery = gr.Gallery(
-                label="Column Visualizations",
-                show_label=True,
-                columns=2,
-                height='auto',
-                interactive=True
-            )
+        # ======================================================
+        # Event bindings
+        # ======================================================
+        generate_btn.click(
+            fn=generate_and_evaluate_data,
+            inputs=[system_prompt_input, user_prompt_input, temp_dir_state, reference_input, model_select],
+            outputs=[output_df, download_csv, evaluation_df, generated_state, images_gallery]
+        )
 
-        # Hidden state for internal use
-        generated_state = gr.State()
+        reference_input.change(
+            fn=display_reference_csv,
+            inputs=[reference_input],
+            outputs=[reference_display]
+        )
 
-    # ======================================================
-    # Event bindings
-    # ======================================================
-    generate_btn.click(
-        fn=generate_and_evaluate_data,
-        inputs=[system_prompt_input, user_prompt_input, temp_dir_state, reference_input, model_select],
-        outputs=[output_df, download_csv, evaluation_df, generated_state, images_gallery]
-    )
+    demo.launch(debug=True)
 
-    reference_input.change(
-        fn=display_reference_csv,
-        inputs=[reference_input],
-        outputs=[reference_display]
-    )
-
-demo.launch(debug=True)
+if __name__ == '__main__':
+    main()
