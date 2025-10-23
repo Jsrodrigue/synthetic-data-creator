@@ -2,7 +2,7 @@
 
 An intelligent synthetic data generator that uses OpenAI models to create realistic tabular datasets based on reference data. This project includes an intuitive web interface built with Gradio.
 
-> **🎓 Educational Project**: This project was created as part of the comprehensive LLM Engineering course on Udemy: [LLM Engineering: Master AI and Large Language Models](https://www.udemy.com/course/llm-engineering-master-ai-and-large-language-models/learn/lecture/52941433#questions/23828099). It demonstrates practical applications of LLM engineering principles, prompt engineering, and synthetic data generation techniques.
+> **🎓 Educational Project**: This project was inspired by the highly regarded LLM Engineering course on Udemy: [LLM Engineering: Master AI and Large Language Models](https://www.udemy.com/course/llm-engineering-master-ai-and-large-language-models/learn/lecture/52941433#questions/23828099). It demonstrates practical applications of LLM engineering principles, prompt engineering, and synthetic data generation techniques.
 
 ## Key highlights:
 - Built with Python & Gradio  
@@ -38,7 +38,7 @@ An intelligent synthetic data generator that uses OpenAI models to create realis
 
 
 ### Video Demo
-[![Video Demo](docs/screenshots/video_thumbnail.png)](https://youtube.com/watch?v=your-demo-video)
+[![Video Demo](docs/screenshots/video_thumbnail.png)](https://youtu.be/Y1UnDmHnCgc)
 *Click to watch a complete walkthrough of the application*
 
 
@@ -217,8 +217,7 @@ synthetic_data/
 │   ├── openai_utils.py     # Wrappers for OpenAI API calls
 │   └── plot_utils.py  
      # Functions to create visualizations from data
-├── temp_plots/            # Temporary folder for generated plot images (auto-cleaned)
-└── __pycache__/           # Python bytecode cache (auto-generated)
+└──  temp_plots/            # Temporary folder for generated plot images (auto-cleaned)
 ```
 
 ## 📄 License
