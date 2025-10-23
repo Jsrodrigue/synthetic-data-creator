@@ -1,5 +1,5 @@
 # -------------------Setup Constants -------------------
-N_REFERENCE_ROWS = 32  # Max reference rows per batch for sampling
+N_REFERENCE_ROWS = 64  # Max reference rows per batch for sampling
 MAX_TOKENS_MODEL = 128_000 # Max tokens supported by the model, used for batching computations
 PROJECT_TEMP_DIR = "temp_plots"
 
@@ -29,7 +29,7 @@ Rules:
 11. Remove any trailing commas before closing brackets.
 12. Do not include any reference data or notes about it in the output.
 13. The output must always be valid JSON parseable by standard JSON parsers.
-14. Don't repeat any exact column.
+14. Don't repeat any exact column neither from the reference or from previous generated data.
 15. When using reference data, consider the entire dataset for statistical patterns and diversity; 
 do not restrict generation to the first rows or the order of the dataset.
 16. Introduce slight random variations in numerical values, and choose categorical values randomly according to the distribution, 

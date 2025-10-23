@@ -35,17 +35,25 @@ def generate_and_evaluate_data(
 
     print(f"[Info] Total rows requested: {total_rows}")
 
-    # ---------------- Estimate tokens per row using example prompt ----------------
+    # Estimate tokens for the prompt by adding system, user and sample (used once per batch)
+    prompt_sample = f"{system_prompt}  {user_prompt}  {sample_reference(reference_df, n_reference_rows)}"
+    prompt_tokens = max(1, len(prompt_sample) // 4)
+
+    # Estimate tokens per row dynamically using a sample
     example_sample = sample_reference(reference_df, n_reference_rows)
-    example_prompt = f"{system_prompt}\n{user_prompt}\nSample: {example_sample}"
-    tokens_per_row = max(1, len(example_prompt) // 4)
-    print(f"[Info] Tokens per row estimate (from example): {tokens_per_row}")
+    if example_sample is not None and len(example_sample) > 0:
+        sample_text = str(example_sample)
+        tokens_per_row = max(1, len(sample_text) // len(example_sample) // 4)
+    else:
+        tokens_per_row = 30  # fallback if no reference
+
+    print(f"[Info] Tokens per row estimate: {tokens_per_row}, Prompt tokens: {prompt_tokens}")
 
     # ---------------- Batch Generation Loop ----------------
     while rows_left > 0:
         iteration += 1
         batch_sample = sample_reference(reference_df, n_reference_rows)
-        batch_size = min(rows_left, max(1, max_tokens_model // tokens_per_row))
+        batch_size = min(rows_left, max(1, (max_tokens_model - prompt_tokens) // tokens_per_row))
         print(f"[Batch {iteration}] Batch size: {batch_size}, Rows left: {rows_left}")
 
         try:

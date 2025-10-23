@@ -83,12 +83,15 @@ class SimpleEvaluator:
     ) -> Dict[str, List[Optional[Image.Image]]]:
         """
         Create histogram and boxplot visualizations for each column and save them as temporary images.
+        Handles special characters in column names and category labels.
         """
         vis_dict: Dict[str, List[Optional[Image.Image]]] = {}
         common_cols = list(set(reference_df.columns) & set(generated_df.columns))
 
         for col in common_cols:
-            # Histogram
+            col_safe = str(col).replace("_", r"\_").replace("$", r"\$")  # Escape special chars
+
+            # ---------------- Histogram ----------------
             plt.figure(figsize=(6, 4))
             if pd.api.types.is_numeric_dtype(reference_df[col]):
                 sns.histplot(reference_df[col], color="blue", label="Reference",
@@ -98,8 +101,8 @@ class SimpleEvaluator:
             else:  # Categorical
                 ref_counts = reference_df[col].value_counts(normalize=percentage)
                 gen_counts = generated_df[col].value_counts(normalize=percentage)
-                
                 categories = list(set(ref_counts.index) | set(gen_counts.index))
+                categories_safe = [str(cat).replace("_", r"\_").replace("$", r"\$") for cat in categories]
                 ref_vals = [ref_counts.get(cat, 0) for cat in categories]
                 gen_vals = [gen_counts.get(cat, 0) for cat in categories]
 
@@ -107,30 +110,30 @@ class SimpleEvaluator:
                 width = 0.4
                 plt.bar([i - width/2 for i in x], ref_vals, width=width, color="blue", alpha=0.7, label="Reference")
                 plt.bar([i + width/2 for i in x], gen_vals, width=width, color="orange", alpha=0.7, label="Generated")
-                plt.xticks(x, categories, rotation=45)
+                plt.xticks(x, categories_safe, rotation=45, ha="right")
 
-            plt.title(f"Histogram comparison for '{col}'")
+            plt.title(f"Histogram comparison for '{col_safe}'", fontsize=12, usetex=False)
             plt.legend()
             plt.tight_layout()
             hist_path = os.path.join(self.temp_dir, f"{col}_hist.png")
-            plt.savefig(hist_path)
+            plt.savefig(hist_path, bbox_inches='tight')
             plt.close()
             hist_img = Image.open(hist_path)
 
-            # Boxplot (numerical only)
+            # ---------------- Boxplot (numerical only) ----------------
             box_img = None
             if pd.api.types.is_numeric_dtype(reference_df[col]):
                 plt.figure(figsize=(6, 4))
                 df_box = pd.DataFrame({
-                            'Value': pd.concat([reference_df[col], generated_df[col]], ignore_index=True),
-                            'Dataset': ['Reference']*len(reference_df[col]) + ['Generated']*len(generated_df[col])
-                        })
+                    'Value': pd.concat([reference_df[col], generated_df[col]], ignore_index=True),
+                    'Dataset': ['Reference']*len(reference_df[col]) + ['Generated']*len(generated_df[col])
+                })
 
                 sns.boxplot(x='Dataset', y='Value', data=df_box, palette=['#1f77b4','#ff7f0e'])
-                plt.title(f"Boxplot comparison for '{col}'")
+                plt.title(f"Boxplot comparison for '{col_safe}'", fontsize=12, usetex=False)
                 plt.tight_layout()
                 box_path = os.path.join(self.temp_dir, f"{col}_box.png")
-                plt.savefig(box_path)
+                plt.savefig(box_path, bbox_inches='tight')
                 plt.close()
                 box_img = Image.open(box_path)
 
