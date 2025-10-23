@@ -39,6 +39,7 @@ An intelligent synthetic data generator that uses OpenAI models to create realis
 
 ### Video Demo
 [![Video Demo](https://img.youtube.com/vi/Y1UnDmHnCgc/0.jpg)](https://youtu.be/Y1UnDmHnCgc)
+
 *Click to watch a complete walkthrough of the application*
 
 
